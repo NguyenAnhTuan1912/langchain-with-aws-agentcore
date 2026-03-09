@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+
+    "paths": {
+      "@/*": ["./src/*"],
+      "@core/*": ["./src/core/*"],
+      "@tools/*": ["./src/tools/*"],
+      "@agent-graph/*": ["./src/agent-graph/*"]
+    },
+
+    "outDir": "build"
+  },
+  "include": ["src", "app.ts"]
+}
