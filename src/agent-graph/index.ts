@@ -1,4 +1,4 @@
-import { StateGraph, START, END } from "@langchain/langgraph";
+import { MemorySaver, StateGraph, START, END } from "@langchain/langgraph";
 
 import { setupLLM } from "@/core/llm";
 
@@ -18,13 +18,16 @@ export async function createAgent() {
     setupShouldContinueConditionalEdge(),
   ]);
 
-  const agent = new StateGraph(MessagesState)
+  const checkpointer = new MemorySaver();
+
+  const builder = new StateGraph(MessagesState)
     .addNode("llmCall", llmCallNode)
     .addNode("toolNode", toolNode)
     .addEdge(START, "llmCall")
     .addConditionalEdges("llmCall", shouldContinue, ["toolNode", END])
-    .addEdge("toolNode", "llmCall")
-    .compile();
+    .addEdge("toolNode", "llmCall");
+
+  const agent = builder.compile({ checkpointer });
 
   return agent;
 }

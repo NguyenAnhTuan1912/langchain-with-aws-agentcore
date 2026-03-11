@@ -17,9 +17,12 @@ async function main() {
 
         console.log(`Session ${context.sessionId} - Received prompt:`, prompt);
 
-        const result = await agent.invoke({
-          messages: [new HumanMessage(prompt)],
-        });
+        const result = await agent.invoke(
+          {
+            messages: [new HumanMessage(prompt)],
+          },
+          { configurable: { thread_id: context.sessionId } },
+        );
 
         const last = result.messages[result.messages.length - 1];
 
