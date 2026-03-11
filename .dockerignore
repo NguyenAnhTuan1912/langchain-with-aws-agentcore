@@ -1,0 +1,8 @@
+node_modules
+build
+test
+
+.env.example
+.gitignore
+pnpm-lock.yaml
+README.md
