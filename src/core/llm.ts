@@ -51,6 +51,22 @@ Nếu memory không liên quan đến câu hỏi hiện tại, bỏ qua nó.
   ["human", "{input}"],
 ]);
 
+const promptContent = `Bạn là một trợ lý AI thông minh, thân thiện, trả lời bằng tiếng Việt.
+
+## Long-term Memory
+Dưới đây là những thông tin bạn nhớ từ các cuộc hội thoại trước với user.
+Hãy sử dụng chúng một cách tự nhiên khi relevant, không cần nhắc rằng bạn đang dùng memory.
+Nếu memory không liên quan đến câu hỏi hiện tại, bỏ qua nó.
+
+{long_term_memories}
+
+## Instructions
+- Trả lời ngắn gọn, chính xác
+- Tham chiếu thông tin từ memory khi phù hợp
+- Nếu user hỏi "bạn còn nhớ không?", hãy search trong memory context ở trên
+
+Hãy trả lời câu hỏi của người dùng, dựa vào lịch sử hội thoại và những gì bạn biết`;
+
 export type TReturnTypeOfSetupLLM = Awaited<ReturnType<typeof setupLLM>>;
 
 export async function setupLLM() {
@@ -61,7 +77,6 @@ export async function setupLLM() {
     const [localTools, _] = getToolsInformation();
     console.log(`  🔧 Found ${localTools.length} local tools`);
 
-    // Gộp tất cả rồi bind 1 lần
     allTools = [...localTools];
     finalLLM = llm.bindTools(allTools);
     console.log(`  🔧 Bound ${allTools.length} total tools to LLM`);
@@ -70,9 +85,10 @@ export async function setupLLM() {
   return {
     llm: finalLLM,
     prompt,
+    promptContent,
     allTools,
     allToolsByName: new Map<string, Tool>(
-      allTools.map((tool) => [tool.id, tool]),
+      allTools.map((tool) => [tool.name, tool]),
     ),
   };
 }
